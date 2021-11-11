@@ -54,6 +54,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             buttonTitle1: 'Find Foods',
           );
         } else {
+          print(state.hasMaxData.toString() + " Ini TransactionLoaded");
+
           // print("saya berada di TransactionLoaded");
           double listItemWidth = MediaQuery.of(context).size.width - 2 * defaultMargin;
           return RefreshIndicator(
@@ -154,12 +156,14 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                           SizedBox(
                             height: 60,
                           ),
-                          Container(
-                            child: Center(
-                                child: SizedBox(
-                              child: loadingIndicator,
-                            )),
-                          ),
+                          // if (state.hasMaxData != true) ...[
+                          //   Container(
+                          //     child: Center(
+                          //         child: SizedBox(
+                          //       child: loadingIndicator,
+                          //     )),
+                          //   )
+                          // ]
                         ],
                       ),
                     )
@@ -170,6 +174,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
           );
         }
       } else if (state is TransactionLoading) {
+        print(state.hasMaxData.toString() + " Ini TransactionLoading");
         // return Center(child: loadingIndicator);
         // print("saya berada di TransactionLoading");
         isLoading = true;
@@ -236,6 +241,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                       element.status == TransactionStatus.cancelled)
                                   .toList();
 
+                          // print("ASDQWE " + transaction.toString());
+
                           return Column(
                             children: transaction
                                 .map(
@@ -255,12 +262,14 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                 .toList(),
                           );
                         }),
-                        Container(
-                          child: Center(
-                              child: SizedBox(
-                            child: loadingIndicator,
-                          )),
-                        )
+                        if (state.hasMaxData != true) ...[
+                          Container(
+                            child: Center(
+                                child: SizedBox(
+                              child: loadingIndicator,
+                            )),
+                          )
+                        ]
                         // SizedBox(
                         //   height: 60,
                         //   child: loadingIndicator,

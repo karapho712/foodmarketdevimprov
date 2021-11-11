@@ -54,18 +54,18 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: CustomBottomNavbar(
-              selectedIndex: selectedPage,
-              onTap: (index) {
-                setState(() {
-                  selectedPage = index;
-                });
-                pageController.jumpToPage(selectedPage);
-              },
-            ),
-          )
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: CustomBottomNavbar(
+          //     selectedIndex: selectedPage,
+          //     onTap: (index) {
+          //       setState(() {
+          //         selectedPage = index;
+          //       });
+          //       pageController.jumpToPage(selectedPage);
+          //     },
+          //   ),
+          // )
         ],
       ),
     );
