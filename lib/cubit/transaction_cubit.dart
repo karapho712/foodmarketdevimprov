@@ -11,6 +11,7 @@ part 'transaction_state.dart';
 class TransactionCubit extends Cubit<TransactionState> {
   TransactionCubit() : super(TransactionInitial());
   int page = 1;
+  bool maxItem = false;
 
   Future<void> getTransactions({int? indexpage = 0}) async {
     final TransactionServices transService;
@@ -25,24 +26,33 @@ class TransactionCubit extends Cubit<TransactionState> {
       oldTrans = currentState.transactions;
     }
 
-    emit(TransactionLoading(oldTrans, isFirstFetch: page == 1));
+    emit(TransactionLoading(oldTrans, hasMaxData: false));
     print("transaction_cubit 2 " + state.toString());
 
     ApiReturnValue<List<Transaction>> result = await TransactionServices.getTransactions(page: page);
+    print("test111 " + result.value.toString());
+    print("panjang datanya" + result.value!.length.toString());
 
-    if (result.value != null) {
-      page++;
+    // if (result.value != null) {
+    if (result.value!.isNotEmpty) {
+      if (maxItem == false) {
+        page++;
+      }
       // print(page);
       // log(result.value.toString());
 
-      final newdata = (state as TransactionLoading).oldTransaction;
-      newdata.addAll(result.value!);
+      // final newdata = (state as TransactionLoading).oldTransaction;
+
+      oldTrans.addAll(result.value!);
+      print(oldTrans.length.toString() + " Panjang data loading saat ini");
 
       // emit(TransactionLoaded(result.value!));
-      emit(TransactionLoaded(newdata));
+      emit(TransactionLoaded(oldTrans));
       print("transaction_cubit 3 " + state.toString());
     } else {
-      emit(TransactionLoadingFailed(result.message!));
+      emit(TransactionLoading(oldTrans, hasMaxData: true));
+      maxItem = true;
+      // emit(TransactionLoadingFailed(result.message!));
     }
   }
 

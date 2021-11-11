@@ -29,7 +29,7 @@ class TransactionLoadingFailed extends TransactionState {
 
 class TransactionLoading extends TransactionState {
   final List<Transaction> oldTransaction;
-  final bool isFirstFetch;
+  final bool hasMaxData;
 
-  TransactionLoading(this.oldTransaction, {this.isFirstFetch = false});
+  TransactionLoading(this.oldTransaction, {this.hasMaxData = false});
 }
