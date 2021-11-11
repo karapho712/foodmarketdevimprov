@@ -32,7 +32,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   }
 
   _getMoreList() async {
-    print("get more list");
+    // print("get more list");
     // await context.read<TransactionCubit>().getOldTransaction();
     //   BlocBuilder<TransactionCubit, TransactionState>(builder: (_, state) {
     //   // print(newdata);
@@ -54,7 +54,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             buttonTitle1: 'Find Foods',
           );
         } else {
-          print("saya berada di TransactionLoaded");
+          // print("saya berada di TransactionLoaded");
           double listItemWidth = MediaQuery.of(context).size.width - 2 * defaultMargin;
           return RefreshIndicator(
             onRefresh: () async {
@@ -171,7 +171,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
         }
       } else if (state is TransactionLoading) {
         // return Center(child: loadingIndicator);
-        print("saya berada di TransactionLoading");
+        // print("saya berada di TransactionLoading");
         isLoading = true;
         double listItemWidth = MediaQuery.of(context).size.width - 2 * defaultMargin;
         return RefreshIndicator(

@@ -17,6 +17,7 @@ class TransactionCubit extends Cubit<TransactionState> {
     // ApiReturnValue<List<Transaction>> result = await TransactionServices.getTransactions(page: indexpage);
 
     final currentState = state;
+    print("transaction_cubit 1" + currentState.toString());
 
     var oldTrans = <Transaction>[];
 
@@ -25,6 +26,7 @@ class TransactionCubit extends Cubit<TransactionState> {
     }
 
     emit(TransactionLoading(oldTrans, isFirstFetch: page == 1));
+    print("transaction_cubit 2 " + state.toString());
 
     ApiReturnValue<List<Transaction>> result = await TransactionServices.getTransactions(page: page);
 
@@ -38,6 +40,7 @@ class TransactionCubit extends Cubit<TransactionState> {
 
       // emit(TransactionLoaded(result.value!));
       emit(TransactionLoaded(newdata));
+      print("transaction_cubit 3 " + state.toString());
     } else {
       emit(TransactionLoadingFailed(result.message!));
     }
