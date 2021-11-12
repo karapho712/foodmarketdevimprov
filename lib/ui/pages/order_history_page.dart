@@ -22,26 +22,40 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   //   });
   // }
 
-  void setupScrollController(context) {
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        BlocProvider.of<TransactionCubit>(context).getTransactions();
-        // _getMoreList();
-      }
-    });
+  // void setupScrollController(context) {
+  //   _scrollController.addListener(() {
+  //     if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+  //       BlocProvider.of<TransactionCubit>(context).getTransactions();
+  //       // _getMoreList();
+  //     }
+  //   });
+  // }
+
+  void onScroll() {
+    double maxScroll = _scrollController.position.maxScrollExtent;
+    double currentSctoll = _scrollController.position.pixels;
+
+    if (currentSctoll == maxScroll) {
+      Timer(Duration(milliseconds: 1000), () => BlocProvider.of<TransactionCubit>(context).getTransactions());
+      // BlocProvider.of<TransactionCubit>(context).getTransactions();
+      // isLoading = true;
+      // print('3(mainpage, scroll controller) Saat ini add post event bloc ');
+    } else {
+      // isLoading = false;
+    }
   }
 
-  _getMoreList() async {
-    // print("get more list");
-    // await context.read<TransactionCubit>().getOldTransaction();
-    //   BlocBuilder<TransactionCubit, TransactionState>(builder: (_, state) {
-    //   // print(newdata);
-    // BlocProvider.of<TransactionCubit>(context).getOldTransaction();
-  }
+  // _getMoreList() async {
+  //   // print("get more list");
+  //   // await context.read<TransactionCubit>().getOldTransaction();
+  //   //   BlocBuilder<TransactionCubit, TransactionState>(builder: (_, state) {
+  //   //   // print(newdata);
+  //   // BlocProvider.of<TransactionCubit>(context).getOldTransaction();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    setupScrollController(context);
+    _scrollController.addListener(onScroll);
     return BlocBuilder<TransactionCubit, TransactionState>(builder: (_, state) {
       // print(state);
       if (state is TransactionLoaded) {
@@ -54,7 +68,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             buttonTitle1: 'Find Foods',
           );
         } else {
-          print(state.hasMaxData.toString() + " Ini TransactionLoaded");
+          print(state.hasMaxData);
+          print("di atas adalah maxdata");
 
           // print("saya berada di TransactionLoaded");
           double listItemWidth = MediaQuery.of(context).size.width - 2 * defaultMargin;
@@ -136,7 +151,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                             //       .toList(),
                             // );
 
-                            TransactionLoaded newItem = state as TransactionLoaded;
+                            // TransactionLoaded newItem = state as TransactionLoaded;
                             return Column(
                               children: transaction
                                   .map((e) => Padding(
@@ -153,17 +168,17 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                   .toList(),
                             );
                           }),
+                          if (state.hasMaxData != true) ...[
+                            Container(
+                              child: Center(
+                                  child: SizedBox(
+                                child: loadingIndicator,
+                              )),
+                            )
+                          ],
                           SizedBox(
                             height: 60,
                           ),
-                          // if (state.hasMaxData != true) ...[
-                          //   Container(
-                          //     child: Center(
-                          //         child: SizedBox(
-                          //       child: loadingIndicator,
-                          //     )),
-                          //   )
-                          // ]
                         ],
                       ),
                     )
@@ -173,120 +188,122 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
             ),
           );
         }
-      } else if (state is TransactionLoading) {
-        print(state.hasMaxData.toString() + " Ini TransactionLoading");
-        // return Center(child: loadingIndicator);
-        // print("saya berada di TransactionLoading");
-        isLoading = true;
-        double listItemWidth = MediaQuery.of(context).size.width - 2 * defaultMargin;
-        return RefreshIndicator(
-          onRefresh: () async {
-            await context.read<TransactionCubit>().getTransactions();
-          },
-          child: ListView(
-            controller: _scrollController,
-            // itemExtent: state.transactions.length + 1,
-            children: [
-              Column(
-                children: [
-                  // *Header
-                  Container(
-                    height: 100,
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: defaultMargin),
-                    padding: EdgeInsets.symmetric(horizontal: defaultMargin),
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Your Orders",
-                          style: blackFontStyle1,
-                        ),
-                        Text("Wait for the best meal", style: greyFontStyle.copyWith(fontWeight: FontWeight.w300))
-                      ],
-                    ),
-                  ),
-                  // * Body
-                  Container(
-                    width: double.infinity,
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        CustomTabBar(
-                          titles: ['In Progress', 'Past Orders'],
-                          selectedIndex: selectedIndex,
-                          onTap: (index) {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Builder(builder: (_) {
-                          // state.transactions.addAll(iterable)
+      }
+      // else if (state is TransactionLoading) {
+      //   print(state.hasMaxData.toString() + " Ini TransactionLoading");
+      //   // return Center(child: loadingIndicator);
+      //   // print("saya berada di TransactionLoading");
+      //   isLoading = true;
+      //   double listItemWidth = MediaQuery.of(context).size.width - 2 * defaultMargin;
+      //   return RefreshIndicator(
+      //     onRefresh: () async {
+      //       await context.read<TransactionCubit>().getTransactions();
+      //     },
+      //     child: ListView(
+      //       controller: _scrollController,
+      //       // itemExtent: state.transactions.length + 1,
+      //       children: [
+      //         Column(
+      //           children: [
+      //             // *Header
+      //             Container(
+      //               height: 100,
+      //               width: double.infinity,
+      //               margin: EdgeInsets.only(bottom: defaultMargin),
+      //               padding: EdgeInsets.symmetric(horizontal: defaultMargin),
+      //               color: Colors.white,
+      //               child: Column(
+      //                 crossAxisAlignment: CrossAxisAlignment.start,
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: [
+      //                   Text(
+      //                     "Your Orders",
+      //                     style: blackFontStyle1,
+      //                   ),
+      //                   Text("Wait for the best meal", style: greyFontStyle.copyWith(fontWeight: FontWeight.w300))
+      //                 ],
+      //               ),
+      //             ),
+      //             // * Body
+      //             Container(
+      //               width: double.infinity,
+      //               color: Colors.white,
+      //               child: Column(
+      //                 children: [
+      //                   CustomTabBar(
+      //                     titles: ['In Progress', 'Past Orders'],
+      //                     selectedIndex: selectedIndex,
+      //                     onTap: (index) {
+      //                       setState(() {
+      //                         selectedIndex = index;
+      //                       });
+      //                     },
+      //                   ),
+      //                   SizedBox(
+      //                     height: 16,
+      //                   ),
+      //                   Builder(builder: (_) {
+      //                     // state.transactions.addAll(iterable)
 
-                          List<Transaction> transaction = (selectedIndex == 0)
-                              ? state.oldTransaction
-                                  .where((element) =>
-                                      element.status == TransactionStatus.on_delivery ||
-                                      element.status == TransactionStatus.pending)
-                                  .toList()
-                              : state.oldTransaction
-                                  .where((element) =>
-                                      element.status == TransactionStatus.delivered ||
-                                      element.status == TransactionStatus.cancelled)
-                                  .toList();
+      //                     List<Transaction> transaction = (selectedIndex == 0)
+      //                         ? state.oldTransaction
+      //                             .where((element) =>
+      //                                 element.status == TransactionStatus.on_delivery ||
+      //                                 element.status == TransactionStatus.pending)
+      //                             .toList()
+      //                         : state.oldTransaction
+      //                             .where((element) =>
+      //                                 element.status == TransactionStatus.delivered ||
+      //                                 element.status == TransactionStatus.cancelled)
+      //                             .toList();
 
-                          // print("ASDQWE " + transaction.toString());
+      //                     // print("ASDQWE " + transaction.toString());
 
-                          return Column(
-                            children: transaction
-                                .map(
-                                  (e) => Padding(
-                                    padding:
-                                        const EdgeInsets.only(right: defaultMargin, left: defaultMargin, bottom: 16),
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        if (e.status == TransactionStatus.pending) {
-                                          await launch(e.paymentUrl!);
-                                        }
-                                      },
-                                      child: OrderListItem(transaction: e, itemWidth: listItemWidth),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                          );
-                        }),
-                        if (state.hasMaxData != true) ...[
-                          Container(
-                            child: Center(
-                                child: SizedBox(
-                              child: loadingIndicator,
-                            )),
-                          )
-                        ]
-                        // SizedBox(
-                        //   height: 60,
-                        //   child: loadingIndicator,
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(8.0),
-                        //   child: Center(child: loadingIndicator),
-                        // )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        );
-      } else {
+      //                     return Column(
+      //                       children: transaction
+      //                           .map(
+      //                             (e) => Padding(
+      //                               padding:
+      //                                   const EdgeInsets.only(right: defaultMargin, left: defaultMargin, bottom: 16),
+      //                               child: GestureDetector(
+      //                                 onTap: () async {
+      //                                   if (e.status == TransactionStatus.pending) {
+      //                                     await launch(e.paymentUrl!);
+      //                                   }
+      //                                 },
+      //                                 child: OrderListItem(transaction: e, itemWidth: listItemWidth),
+      //                               ),
+      //                             ),
+      //                           )
+      //                           .toList(),
+      //                     );
+      //                   }),
+      //                   if (state.hasMaxData != true) ...[
+      //                     Container(
+      //                       child: Center(
+      //                           child: SizedBox(
+      //                         child: loadingIndicator,
+      //                       )),
+      //                     )
+      //                   ]
+      //                   // SizedBox(
+      //                   //   height: 60,
+      //                   //   child: loadingIndicator,
+      //                   // ),
+      //                   // Padding(
+      //                   //   padding: const EdgeInsets.all(8.0),
+      //                   //   child: Center(child: loadingIndicator),
+      //                   // )
+      //                 ],
+      //               ),
+      //             )
+      //           ],
+      //         ),
+      //       ],
+      //     ),
+      //   );
+      // }
+      else {
         isLoading = true;
         return Center(child: loadingIndicator);
         // return SizedBox(height: 20);

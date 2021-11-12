@@ -18,6 +18,7 @@ class TransactionServices {
     }
 
     var data = jsonDecode(response.body);
+    // print(data["data"]["current_page"].toString() + " CHECK DATA");
     List<Transaction> transactions = (data['data']['data'] as Iterable).map((e) => Transaction.fromJson(e)).toList();
 
     // List<Transaction> newlist = (data['data']['data'] as Iterable).map((e) => Transaction.fromJson(e)).toList();
@@ -27,7 +28,7 @@ class TransactionServices {
     // transactions.insert(9, data['data']['last_page']);
     // print(transactions);
 
-    return ApiReturnValue(value: transactions);
+    return ApiReturnValue(value: transactions, value2: data["data"]["current_page"]);
 
     // await Future.delayed(Duration(seconds: 4));
 
